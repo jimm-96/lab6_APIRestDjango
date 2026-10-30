@@ -14,7 +14,7 @@ El proyecto modela el catálogo y la operación básica de un restaurante o cafe
 | :--- | :--- | :--- | :--- | :--- |
 | **Joaquín Michea** | Anfitrión | **Plato** | `id`, `nombre`, `precio`, `categoria` | `GET /api/platos/`<br>`POST /api/platos/` |
 | **Christian Salazar** | Desarrollador | **Chef** | `id`, `nombre`, `especialidad`, `experiencia_anios` | `GET /api/chefs/`<br>`POST /api/chefs/` |
-| **Maicol Aracena** | Desarrolladora/or | **Categoría** | `id`, `nombre`, `descripcion` | `GET /api/categorias/`<br>`POST /api/categorias/` |
+| **Maicol Aracena** | Desarrollador | **Categoría** | `id`, `nombre`, `descripcion` | `GET /api/categorias/`<br>`POST /api/categorias/` |
 
 ---
 
