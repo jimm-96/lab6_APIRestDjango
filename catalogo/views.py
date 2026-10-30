@@ -26,6 +26,7 @@ categorias = [
         "descripcion": "Dulces para cerrar la comida",
         "activa": True,
     },
+]
 
 # Datos de ejemplo en memoria para el recurso Plato
 platos = [
@@ -114,6 +115,9 @@ def crear_categoria(request):
     }
     categorias.append(nueva_categoria)
     return Response(nueva_categoria, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
 def lista_chefs(request):
     return Response(CHEFS)
 
