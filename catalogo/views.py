@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Datos de ejemplo en memoria para el recurso Plato
 platos = [
@@ -24,3 +26,12 @@ platos = [
         "disponible": False
     }
 ]
+
+
+@api_view(['GET'])
+def plato_list(request):
+    """
+    Endpoint para obtener la lista de platos (GET).
+    """
+    if request.method == 'GET':
+        return Response(platos)
