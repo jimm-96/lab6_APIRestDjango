@@ -25,6 +25,10 @@ from catalogo import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # ===== CATEGORIA =====
+    path('api/categorias/', views.listar_categorias, name='listar_categorias'),
+    path('api/categorias/crear/', views.crear_categoria, name='crear_categoria'),
     path('chefs/', views.lista_chefs, name='lista_chefs'),
     path('chefs/crear/', views.crear_chef, name='crear_chef'),
 ]
