@@ -2,6 +2,10 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from .models import Plato
+from .serializers import PlatoSerializer
+from django.http import Http404
 
 # Create your views here.
 
@@ -53,12 +57,11 @@ categorias = [
     }
 ]
 """
-
-@api_view(['GET', 'POST'])
+"""@api_view(['GET', 'POST'])
 def plato_list(request):
-    """
+    
     Endpoint para listar platos (GET) y agregar un nuevo plato (POST).
-    """
+    
     if request.method == 'GET':
         return Response(platos)
 
@@ -72,7 +75,7 @@ def plato_list(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        """nuevo_id = (max([p["id"] for p in platos]) + 1) if platos else 1
+        nuevo_id = (max([p["id"] for p in platos]) + 1) if platos else 1
         nuevo_plato = {
             "id": nuevo_id,
             "nombre": nombre,
@@ -80,8 +83,36 @@ def plato_list(request):
             "categoria": request.data.get('categoria', 'General'),
             "disponible": request.data.get('disponible', True)
         }
-        platos.append(nuevo_plato)"""
-        return Response(nuevo_plato, status=status.HTTP_201_CREATED)
+        platos.append(nuevo_plato)
+        return Response(nuevo_plato, status=status.HTTP_201_CREATED)"""
+
+class PlatoList(APIView):
+    def get(self, request):
+        return Response(PlatoSerializer(Plato.objects.all(), many=True).data)
+
+    def post(self, request):
+        serializer = PlatoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+class PlatoDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Plato.objects.get(pk=pk)
+        except Plato.DoesNotExist:
+            raise Http404
+    def put(self, request, pk):
+        serializer = PlatoSerializer(self.get_object(pk), data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+    def delete(self, request, pk):
+        self.get_object(pk).delete()
+        return Response(status=204)
+
+    
 
 # Create your views here.
 
