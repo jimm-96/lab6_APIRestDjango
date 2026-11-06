@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('platos/', views.plato_list, name='plato_list'),
+    path('platos/', views.PlatoList.as_view()),
+    path('platos/<int:pk>/', views.PlatoDetail.as_view()),
     path('categorias/', views.listar_categorias, name='listar_categorias'),
     path('categorias/crear/', views.crear_categoria, name='crear_categoria'),
     path('chefs/', views.lista_chefs, name='lista_chefs'),
