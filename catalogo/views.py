@@ -8,6 +8,7 @@ from .models import Chef
 from .serializers import ChefSerializer
 # Create your views here.
 
+from django.http import Http404
 
 # ===== CATEGORIA =====
 categorias = [
@@ -150,3 +151,22 @@ class ChefList(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+
+
+class ChefDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Chef.objects.get(pk=pk)
+        except Chef.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        serializer = ChefSerializer(self.get_object(pk), data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        self.get_object(pk).delete()
+        return Response(status=204)
