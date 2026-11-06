@@ -29,7 +29,7 @@ categorias = [
 ]
 
 # Datos de ejemplo en memoria para el recurso Plato
-platos = [
+"""platos = [
     {
         "id": 1,
         "nombre": "Pastel de Choclo",
@@ -52,7 +52,7 @@ platos = [
         "disponible": False
     }
 ]
-
+"""
 
 @api_view(['GET', 'POST'])
 def plato_list(request):
@@ -72,7 +72,7 @@ def plato_list(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        nuevo_id = (max([p["id"] for p in platos]) + 1) if platos else 1
+        """nuevo_id = (max([p["id"] for p in platos]) + 1) if platos else 1
         nuevo_plato = {
             "id": nuevo_id,
             "nombre": nombre,
@@ -80,7 +80,7 @@ def plato_list(request):
             "categoria": request.data.get('categoria', 'General'),
             "disponible": request.data.get('disponible', True)
         }
-        platos.append(nuevo_plato)
+        platos.append(nuevo_plato)"""
         return Response(nuevo_plato, status=status.HTTP_201_CREATED)
 
 # Create your views here.
