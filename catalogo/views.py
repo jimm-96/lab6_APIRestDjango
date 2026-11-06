@@ -10,6 +10,8 @@ from .serializers import ChefSerializer
 
 from django.http import Http404
 
+from rest_framework import viewsets
+
 # ===== CATEGORIA =====
 categorias = [
     {
@@ -141,32 +143,37 @@ def crear_categoria(request):
 
 
 #lab 7
-class ChefList(APIView):
-    def get(self, request):
-        return Response(ChefSerializer(Chef.objects.all(), many=True).data)
+# class ChefList(APIView):
+#     def get(self, request):
+#         return Response(ChefSerializer(Chef.objects.all(), many=True).data)
 
-    def post(self, request):
-        serializer = ChefSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+#     def post(self, request):
+#         serializer = ChefSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
 
 
-class ChefDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Chef.objects.get(pk=pk)
-        except Chef.DoesNotExist:
-            raise Http404
+# class ChefDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Chef.objects.get(pk=pk)
+#         except Chef.DoesNotExist:
+#             raise Http404
 
-    def put(self, request, pk):
-        serializer = ChefSerializer(self.get_object(pk), data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+#     def put(self, request, pk):
+#         serializer = ChefSerializer(self.get_object(pk), data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=400)
 
-    def delete(self, request, pk):
-        self.get_object(pk).delete()
-        return Response(status=204)
+#     def delete(self, request, pk):
+#         self.get_object(pk).delete()
+#         return Response(status=204)
+
+
+class ChefViewSet(viewsets.ModelViewSet):
+    queryset = Chef.objects.all()
+    serializer_class = ChefSerializer
