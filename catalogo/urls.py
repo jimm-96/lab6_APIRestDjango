@@ -1,11 +1,15 @@
 from django.urls import path
 from . import views
 
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('chefs', views.ChefViewSet)
+
 urlpatterns = [
     path('platos/', views.plato_list, name='plato_list'),
     path('categorias/', views.listar_categorias, name='listar_categorias'),
     path('categorias/crear/', views.crear_categoria, name='crear_categoria'),
-    path('chefs/', views.lista_chefs, name='lista_chefs'),
-    path('chefs/crear/', views.crear_chef, name='crear_chef'),
 ]
 
+urlpatterns += router.urls
