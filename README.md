@@ -14,7 +14,7 @@ El proyecto modela el catálogo y la operación básica de un restaurante o cafe
 | :--- | :--- | :--- | :--- | :--- |
 | **Joaquín Michea** | Anfitrión | **Plato** | `id`, `nombre`, `precio`, `categoria` | `GET /api/platos/`<br>`POST /api/platos/` |
 | **Christian Salazar** | Desarrollador | **Chef** | `id`, `nombre`, `especialidad`, `experiencia_anios` | `GET /api/chefs/`<br>`POST /api/chefs/` |
-| **Maicol Aracena** | Desarrollador | **Categoría** | `id`, `nombre`, `descripcion` | `GET /api/categorias/`<br>`POST /api/categorias/` |
+| **Maicol Aracena** | Desarrollador | **Categoría** | `id`, `nombre`, `descripcion`, `activa` | `GET /api/categorias/`<br>`POST /api/categorias/`<br>`GET /api/categorias/<id>/`<br>`PUT /api/categorias/<id>/`<br>`PATCH /api/categorias/<id>/`<br>`DELETE /api/categorias/<id>/` |
 
 ---
 
@@ -90,15 +90,22 @@ El servidor estará accesible en: `http://127.0.0.1:8000/`
     ```
 
 ### 3. Recurso: Categorías (`/api/categorias/`)
+Desde el Laboratorio 7, este recurso se guarda en la base de datos con el modelo `Categoria` y se sirve con un `ModelViewSet` y un `DefaultRouter`.
+
 * **GET `/api/categorias/`**: Retorna las categorías del menú.
 * **POST `/api/categorias/`**: Registra una nueva categoría.
   * **Payload esperado (JSON):**
     ```json
     {
       "nombre": "Postres",
-      "descripcion": "Dulces tradicionales y repostería artesanal"
+      "descripcion": "Dulces tradicionales y repostería artesanal",
+      "activa": true
     }
     ```
+* **GET `/api/categorias/<id>/`**: Retorna una categoría.
+* **PUT `/api/categorias/<id>/`**: Actualiza una categoría completa.
+* **PATCH `/api/categorias/<id>/`**: Actualiza solo los campos enviados.
+* **DELETE `/api/categorias/<id>/`**: Elimina una categoría.
 
 ---
 
