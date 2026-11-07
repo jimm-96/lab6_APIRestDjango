@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from .models import Plato
 from .serializers import PlatoSerializer
@@ -86,31 +86,9 @@ def plato_list(request):
         platos.append(nuevo_plato)
         return Response(nuevo_plato, status=status.HTTP_201_CREATED)"""
 
-class PlatoList(APIView):
-    def get(self, request):
-        return Response(PlatoSerializer(Plato.objects.all(), many=True).data)
-
-    def post(self, request):
-        serializer = PlatoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-
-class PlatoDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Plato.objects.get(pk=pk)
-        except Plato.DoesNotExist:
-            raise Http404
-    def put(self, request, pk):
-        serializer = PlatoSerializer(self.get_object(pk), data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-    def delete(self, request, pk):
-        self.get_object(pk).delete()
-        return Response(status=204)
+class PlatoViewSet(viewsets.ModelViewSet):
+    queryset = Plato.objects.all()
+    serializer_class = PlatoSerializer
 
     
 
