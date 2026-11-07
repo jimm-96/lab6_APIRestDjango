@@ -4,35 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework.views import APIView
-from .models import Chef
-from .serializers import ChefSerializer
+from .models import Categoria, Chef
+from .serializers import CategoriaSerializer, ChefSerializer
 # Create your views here.
 
 from django.http import Http404
 
 from rest_framework import viewsets
-
-# ===== CATEGORIA =====
-categorias = [
-    {
-        "id": 1,
-        "nombre": "Entradas",
-        "descripcion": "Platos pequeños para comenzar la comida",
-        "activa": True,
-    },
-    {
-        "id": 2,
-        "nombre": "Platos de fondo",
-        "descripcion": "Platos principales del restaurante",
-        "activa": True,
-    },
-    {
-        "id": 3,
-        "nombre": "Postres",
-        "descripcion": "Dulces para cerrar la comida",
-        "activa": True,
-    },
-]
 
 # Datos de ejemplo en memoria para el recurso Plato
 platos = [
@@ -99,29 +77,46 @@ def plato_list(request):
 
 
 
-@api_view(['GET'])
-def listar_categorias(request):
-    return Response(categorias)
+# ===== CATEGORIA =====
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
 
 
-@api_view(['POST'])
-def crear_categoria(request):
-    nombre = request.data.get("nombre")
-    if not nombre:
-        return Response(
-            {"error": "El campo 'nombre' es obligatorio"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    nuevo_id = max((c["id"] for c in categorias), default=0) + 1
-    nueva_categoria = {
-        "id": nuevo_id,
-        "nombre": nombre,
-        "descripcion": request.data.get("descripcion", ""),
-        "activa": request.data.get("activa", True),
-    }
-    categorias.append(nueva_categoria)
-    return Response(nueva_categoria, status=status.HTTP_201_CREATED)
+# Version anterior del CRUD con APIView (Laboratorio 7)
+# class CategoriaList(APIView):
+#     def get(self, request):
+#         categorias = Categoria.objects.all()
+#         serializer = CategoriaSerializer(categorias, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = CategoriaSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class CategoriaDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Categoria.objects.get(pk=pk)
+#         except Categoria.DoesNotExist:
+#             raise Http404
+#
+#     def put(self, request, pk):
+#         categoria = self.get_object(pk)
+#         serializer = CategoriaSerializer(categoria, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def delete(self, request, pk):
+#         categoria = self.get_object(pk)
+#         categoria.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # @api_view(['GET'])
