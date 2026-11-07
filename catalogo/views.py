@@ -86,27 +86,44 @@ def plato_list(request):
         platos.append(nuevo_plato)
         return Response(nuevo_plato, status=status.HTTP_201_CREATED)"""
 
+
+
+
 class PlatoViewSet(viewsets.ModelViewSet):
     queryset = Plato.objects.all()
     serializer_class = PlatoSerializer
 
-    
 
 # Create your views here.
 
 CHEFS = [
-    {"id": 1, "nombre": "Camila Rojas", "especialidad": "Cocina chilena", "anios_experiencia": 12},
-    {"id": 2, "nombre": "Matías Soto", "especialidad": "Pastelería", "anios_experiencia": 8},
-    {"id": 3, "nombre": "Valentina Díaz", "especialidad": "Cocina italiana", "anios_experiencia": 5},
+    {
+        "id": 1,
+        "nombre": "Camila Rojas",
+        "especialidad": "Cocina chilena",
+        "anios_experiencia": 12,
+    },
+    {
+        "id": 2,
+        "nombre": "Matías Soto",
+        "especialidad": "Pastelería",
+        "anios_experiencia": 8,
+    },
+    {
+        "id": 3,
+        "nombre": "Valentina Díaz",
+        "especialidad": "Cocina italiana",
+        "anios_experiencia": 5,
+    },
 ]
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def listar_categorias(request):
     return Response(categorias)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def crear_categoria(request):
     nombre = request.data.get("nombre")
     if not nombre:
@@ -126,12 +143,12 @@ def crear_categoria(request):
     return Response(nueva_categoria, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def lista_chefs(request):
     return Response(CHEFS)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def crear_chef(request):
     nuevo_id = max((c["id"] for c in CHEFS), default=0) + 1
     chef = {
