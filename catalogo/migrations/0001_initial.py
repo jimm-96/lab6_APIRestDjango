@@ -21,4 +21,13 @@ class Migration(migrations.Migration):
                 ('disponible', models.BooleanField(default=True)),
             ],
         ),
+        migrations.CreateModel(
+            name='Chef',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('nombre', models.CharField(max_length=100)),
+                ('especialidad', models.CharField(max_length=100)),
+                ('anios_experiencia', models.IntegerField()),
+            ],
+        ),
     ]
