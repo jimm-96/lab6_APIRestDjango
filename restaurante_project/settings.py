@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zmj(zil^h38l$s7%&b^s&ie)5++n6cb7(ai+zii)%$9)0ikr=1'
+# En Render se exige la variable de entorno; la clave de desarrollo solo sirve en local.
+if 'RENDER' in os.environ:
+    SECRET_KEY = os.environ['SECRET_KEY']
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-solo-para-desarrollo-local')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Render define la variable RENDER, así que en producción queda en False.
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Render entrega el dominio público del servicio en esta variable.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    # Render termina HTTPS en su proxy; Django necesita saberlo para validar CSRF.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -38,18 +51,26 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'catalogo',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Orígenes del frontend autorizados a consumir la API (separados por coma).
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    'CORS_ALLOWED_ORIGINS', 'http://localhost:5173'
+).split(',')
 
 ROOT_URLCONF = 'restaurante_project.urls'
 
@@ -117,6 +138,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# collectstatic deja aquí los archivos que WhiteNoise sirve en producción.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Email
