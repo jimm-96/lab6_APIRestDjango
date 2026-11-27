@@ -13,7 +13,7 @@ El proyecto modela el catálogo y la operación básica de un restaurante o cafe
 | Integrante | Rol | Recurso Asignado | Campos del Recurso | Endpoints |
 | :--- | :--- | :--- | :--- | :--- |
 | **Joaquín Michea** | Anfitrión | **Plato** | `id`, `nombre`, `precio`, `categoria` | `GET /api/platos/`<br>`POST /api/platos/` |
-| **Christian Salazar** | Desarrollador | **Chef** | `id`, `nombre`, `especialidad`, `experiencia_anios` | `GET /api/chefs/`<br>`POST /api/chefs/` |
+| **Christian Salazar** | Desarrollador | **Chef** | `id`, `nombre`, `especialidad`, `anios_experiencia` | `GET /api/chefs/`<br>`POST /api/chefs/` |
 | **Maicol Aracena** | Desarrollador | **Categoría** | `id`, `nombre`, `descripcion`, `activa` | `GET /api/categorias/`<br>`POST /api/categorias/`<br>`GET /api/categorias/<id>/`<br>`PUT /api/categorias/<id>/`<br>`PATCH /api/categorias/<id>/`<br>`DELETE /api/categorias/<id>/` |
 
 ---
@@ -85,7 +85,7 @@ El servidor estará accesible en: `http://127.0.0.1:8000/`
     {
       "nombre": "Auguste Escoffier",
       "especialidad": "Cocina Clásica Francesa",
-      "experiencia_anios": 15
+      "anios_experiencia": 15
     }
     ```
 
@@ -124,3 +124,27 @@ El equipo sigue una metodología de trabajo colaborativo basada en ramas individ
    * **Commit 4:** Conexión de rutas en `urls.py` y verificación en la interfaz navegable de DRF.
 3. Subir la rama a GitHub y abrir un **Pull Request** para revisión y posterior integración a `main`.
 
+---
+
+## ☁️ Laboratorio 8: pruebas y despliegue
+
+### Pruebas
+```bash
+python manage.py test
+```
+
+### Variables de entorno
+
+| Variable | Uso | En local |
+| :--- | :--- | :--- |
+| `SECRET_KEY` | Clave secreta de Django. Obligatoria en Render. | Opcional |
+| `CORS_ALLOWED_ORIGINS` | URLs del frontend separadas por coma, sin `/` final. | Por defecto `http://localhost:5173` |
+| `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL`, `DJANGO_SUPERUSER_PASSWORD` | Opcionales: crean el usuario del admin durante el build. | No se usan |
+
+Render define `RENDER` y `RENDER_EXTERNAL_HOSTNAME` automáticamente: con ellas `DEBUG` queda en `False` y el dominio se agrega a `ALLOWED_HOSTS`.
+
+### Despliegue en Render (Web Service)
+* **Build Command:** `./build.sh`
+* **Start Command:** `gunicorn restaurante_project.wsgi:application`
+
+La base de datos es SQLite: los datos creados en producción se pierden al redesplegar o reiniciar el servicio. Los chefs de ejemplo se cargan con una migración.
